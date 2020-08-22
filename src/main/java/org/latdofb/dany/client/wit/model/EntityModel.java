@@ -1,2 +1,5 @@
-package org.latdofb.dany.client.wit.model;public class EntityModel {
+package org.latdofb.dany.client.wit.model;
+
+public class EntityModel {
+
 }
