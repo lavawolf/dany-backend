@@ -1,6 +1,7 @@
 package org.latdofb.dany.client.wit.api;
 
 import org.latdofb.dany.client.wit.model.BaseEntity;
+import org.latdofb.dany.client.wit.model.WitResponse;
 import org.latdofb.dany.config.DefaultFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -13,5 +14,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface WitClientApi {
 
     @GetMapping("/message")
-    BaseEntity summarize(@RequestHeader("Authorization") String token, @RequestParam String q);
+    WitResponse summarize(@RequestHeader("Authorization") String token, @RequestParam String q);
 }

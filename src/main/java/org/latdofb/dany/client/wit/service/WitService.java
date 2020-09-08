@@ -4,6 +4,7 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.latdofb.dany.client.wit.api.WitClientApi;
 import org.latdofb.dany.client.wit.model.BaseEntity;
+import org.latdofb.dany.client.wit.model.WitResponse;
 import org.latdofb.dany.common.Const;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -18,9 +19,9 @@ public class WitService {
     private final WitClientApi witClientApi;
 
     @Async
-    public Future<BaseEntity> summarize(String request) {
+    public Future<WitResponse> summarize(String request) {
         try {
-            BaseEntity summary = witClientApi.summarize(Const.TOKEN, request);
+            WitResponse summary = witClientApi.summarize("Bearer " + Const.TOKEN, request);
             return new AsyncResult<>(summary);
         } catch(FeignException ex) {
             System.out.println(ex.contentUTF8());

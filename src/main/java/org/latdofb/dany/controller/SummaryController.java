@@ -3,6 +3,8 @@ package org.latdofb.dany.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.latdofb.dany.client.wit.model.BaseEntity;
+import org.latdofb.dany.client.wit.model.EntityModel;
+import org.latdofb.dany.client.wit.model.WitResponse;
 import org.latdofb.dany.client.wit.service.WitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,8 @@ public class SummaryController {
 
     @GetMapping
     public String getSummary(@RequestBody String request) {
-        Future<BaseEntity> summaryAsync = witService.summarize(request);
-        BaseEntity response = null;
+        Future<WitResponse> summaryAsync = witService.summarize(request);
+        WitResponse response = null;
         try {
             response = summaryAsync.get();
         }
@@ -39,8 +41,13 @@ public class SummaryController {
         return summarize(response);
     }
 
-    private String summarize(BaseEntity response) {
+    private String summarize(WitResponse response) {
         if(response == null) return null;
-        return "";
+        StringBuilder sb = new StringBuilder();
+        for(EntityModel entity: response.getEntities().getImportant()) {
+            sb.append(entity.getValue());
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }
