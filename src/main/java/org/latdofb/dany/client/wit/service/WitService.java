@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.concurrent.Future;
 
 @Service
@@ -22,6 +23,19 @@ public class WitService {
     public Future<WitResponse> summarize(String request) {
         try {
             WitResponse summary = witClientApi.summarize("Bearer " + Const.TOKEN, request);
+            return new AsyncResult<>(summary);
+        } catch(FeignException ex) {
+            System.out.println(ex.contentUTF8());
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return new AsyncResult<>(null);
+    }
+
+    @Async
+    public Future<WitResponse> audio(InputStream audio) {
+        try {
+            WitResponse summary = witClientApi.audio("Bearer " + Const.TOKEN, "audio/wav", audio);
             return new AsyncResult<>(summary);
         } catch(FeignException ex) {
             System.out.println(ex.contentUTF8());
