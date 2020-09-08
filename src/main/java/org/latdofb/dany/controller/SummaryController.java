@@ -37,6 +37,7 @@ public class SummaryController {
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            return "ERROR";
         }
         return summarize(response);
     }
