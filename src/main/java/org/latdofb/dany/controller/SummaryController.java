@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.InputStream;
 import java.util.concurrent.Future;
 
 @RestController
@@ -29,8 +30,22 @@ public class SummaryController {
     private final Logger log = LoggerFactory.getLogger(SummaryController.class);
 
     @GetMapping
-    public String getSummary(@RequestBody String request) {
+    public String getText(@RequestBody String request) {
         Future<WitResponse> summaryAsync = witService.summarize(request);
+        WitResponse response = null;
+        try {
+            response = summaryAsync.get();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return "ERROR";
+        }
+        return summarize(response);
+    }
+
+    @GetMapping("/summary/audio")
+    public String getAudio(@RequestBody InputStream audio) {
+        Future<WitResponse> summaryAsync = witService.audio(audio);
         WitResponse response = null;
         try {
             response = summaryAsync.get();
@@ -45,6 +60,8 @@ public class SummaryController {
     private String summarize(WitResponse response) {
         if(response == null) return null;
         StringBuilder sb = new StringBuilder();
+
+        if(response.getEntities() == null || response.getEntities().getImportant() == null) return "";
         for(EntityModel entity: response.getEntities().getImportant()) {
             sb.append(entity.getValue());
             sb.append(" ");
